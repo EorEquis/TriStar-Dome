@@ -1,0 +1,11 @@
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\bin\Release\ASCOM.TriStar.Test.exe.config
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\bin\Release\ASCOM.TriStar.Test.exe
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\bin\Release\ASCOM.TriStar.Test.pdb
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\bin\Release\ASCOM.TriStar.Test.xml
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\Test UI.vbprojResolveAssemblyReference.cache
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Form1.resources
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Resources.resources
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\Test UI.vbproj.GenerateResource.Cache
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.exe
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.xml
+D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.pdb

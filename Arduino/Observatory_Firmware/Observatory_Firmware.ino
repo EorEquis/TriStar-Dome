@@ -1,3 +1,17 @@
+/*************************************************************************
+ * TriStar Observatory ASCOM Dome Firmware
+ * 2017DEC04 - EOR : EorEquis@tristarobservatory.space
+ * v1.0b
+ * 
+ * Not much to do here.  The ROR is treated as an ASCOM "shutter" in a Dome driver.
+ * We pretty much just need to open and close the thing.
+ * 
+ * Version    Date        By    Comment
+ * 0.1.0      2017DEC04   EOR   Initial build
+ * 0.2.0      2017DEC05   EOR   Expand shutterState handling, code getInfo and resetSMC as functions
+ * 1.0.0      2017DEC05   EOR   Initial working build, tested in VS and SGP
+  *************************************************************************/
+ 
 #include <SoftwareSerial.h>
 
 // Pololu SMC config
@@ -9,7 +23,9 @@ const int errPin = 6;         // pin 6 connects to SMC ERR  : Blue
 // SMC Variable IDs
 #define ERROR_STATUS 0
 #define LIMIT_STATUS 3
+#define TARGET_SPEED 20
 #define SPEED 21
+
 
 // SMC motor limit IDs
 #define FORWARD_ACCELERATION 5
@@ -35,6 +51,7 @@ String strCmd;
 unsigned int limitStatus = 0;
 unsigned int errorStatus = 0;
 int currentSpeed = 0;
+int targetSpeed = 0;
 int shutterState = 1;
 
 // SoftwareSerial for communication w/ SMC
@@ -53,7 +70,7 @@ void setup() {
   resetSMC();
   
   // clear the safe-start violation and let the motor run
-  exitSafeStart();
+//  exitSafeStart();
   
   // Set the startup values
   shutterState=getInfo();
@@ -67,7 +84,7 @@ void loop() {
 
   // Refresh info packet every 1s
   currentMillis=millis();
-  if (currentMillis - lastMillis > 1000)
+  if (currentMillis - lastMillis > 500)
   {
     lastMillis=currentMillis;
     shutterState=getInfo();  
@@ -75,6 +92,12 @@ void loop() {
       {
         Serial.print("getInfo() called, shutterState is ");
         Serial.println(shutterState);
+        Serial.print("limitStatus : ");
+        Serial.println(limitStatus);
+        Serial.print("errorStatus : ");
+        Serial.println(errorStatus);
+        Serial.print("currentSpeed : ");
+        Serial.println(currentSpeed);
       }
   }
 
@@ -100,7 +123,7 @@ void loop() {
     {
       if (shutterState == shutterClosed)
       {
-        exitSafeStart();
+        //exitSafeStart();
         setMotorSpeed(1600);
         Serial.print(shutterOpening);
         Serial.println("#");
@@ -116,7 +139,7 @@ void loop() {
     {
       if (shutterState == shutterOpen)
       {
-        exitSafeStart();
+        //exitSafeStart();
         setMotorSpeed(-1600);
         Serial.print(shutterClosing);
         Serial.println("#");
@@ -146,7 +169,7 @@ void loop() {
     if (strCmd == "reset")
     {
       resetSMC();
-      exitSafeStart();
+      //exitSafeStart();
     }
   }
 } // End loop()
@@ -158,21 +181,22 @@ int getInfo()  //TODO Write This
   limitStatus = getSMCVariable(LIMIT_STATUS);
   errorStatus = getSMCVariable(ERROR_STATUS);
   currentSpeed = getSMCVariable(SPEED);
+  targetSpeed = getSMCVariable(TARGET_SPEED);
 
   // See https://www.pololu.com/docs/0J44/6.4 for Limit and Error Status flag registers
 
+  /*
   if (currentSpeed == 0 && (limitStatus == 129 || limitStatus == 257))
   {
-    exitSafeStart();
+    //exitSafeStart();
     limitStatus = getSMCVariable(LIMIT_STATUS);
     errorStatus = getSMCVariable(ERROR_STATUS);
   }
-
-  if (errorStatus > 0)
+  */
+  if (errorStatus != 0)
   {
     return shutterError;
   }
-  
   else if (currentSpeed == 0 && limitStatus == 128)
   {
     return shutterOpen;
@@ -183,12 +207,12 @@ int getInfo()  //TODO Write This
     return shutterClosed;
   }
 
-  else if (currentSpeed > 0)
+  else if (currentSpeed > 0 && (limitStatus == 0 || limitStatus == 144))
   {
     return shutterOpening;
   }
   
-  else if (currentSpeed < 0)
+  else if ((currentSpeed < 0 && (limitStatus == 0) || limitStatus == 272))
   {
     return shutterClosing;
   }
@@ -209,11 +233,12 @@ int readSMCByte()
 
 // required to allow motor to move
 // must be called when controller restarts and after any error
+/*
 void exitSafeStart()
 {
   smcSerial.write(0x83);
 }
-
+*/
 // speed should be a number from -3200 to 3200
 // TODO : I'll be using a set speed, so this can probbaly go away to save mem.
 void setMotorSpeed(int speed)

@@ -1,0 +1,8 @@
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Release\TriStar Dome.dll.config
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Release\TriStar Dome.dll
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Release\TriStar Dome.pdb
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\ASCOM.TriStar.Resources.resources
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\ASCOM.TriStar.SetupDialogForm.resources
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\TriStar Dome.vbproj.GenerateResource.Cache
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\TriStar Dome.dll
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\TriStar Dome.pdb

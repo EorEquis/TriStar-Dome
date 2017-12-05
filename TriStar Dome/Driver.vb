@@ -12,8 +12,9 @@
 '
 ' Date			Who	Vers	Description
 ' -----------	---	-----	-------------------------------------------------------
-' 04-DEC-2017	Eor	1.0.0	Initial edit, from Dome template
-' 05-DEC-2017   Eor 1.0.0   WTF is going on with my IDEs?
+' 04-DEC-2017	Eor	0.1.0	Initial edit, from Dome template
+' 05-DEC-2017   Eor 0.2.0   WTF is going on with my IDEs?
+' 05-DEC-2017   Eor 1.0.0   Initial operating version, tested in SGP
 ' ---------------------------------------------------------------------------------
 '
 '

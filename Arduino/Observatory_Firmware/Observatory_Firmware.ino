@@ -6,13 +6,18 @@
  * Not much to do here.  The ROR is treated as an ASCOM "shutter" in a Dome driver.
  * We pretty much just need to open and close the thing.
  * 
- * Version    Date        By    Comment
- * 0.1.0      2017DEC04   EOR   Initial build
- * 0.2.0      2017DEC05   EOR   Expand shutterState handling, code getInfo and resetSMC as functions
- * 1.0.0      2017DEC05   EOR   Initial working build, tested in VS and SGP
-  *************************************************************************/
+ *  Version     Date        By    Comment
+ *  0.1.0       2017DEC04   EOR   Initial build
+ *  0.2.0       2017DEC05   EOR   Expand shutterState handling, code getInfo and resetSMC as functions
+ *  1.0.0       2017DEC05   EOR   Initial working build, tested in VS and SGP
+ *  1.0.1       2917DEC06   EOR   Clean up some unnecessary code to set motor limits that can be written to SMC's NVRAM
+ **************************************************************************/
  
 #include <SoftwareSerial.h>
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 // Pololu SMC config
 const int rxPin = 3;          // pin 3 connects to SMC TX   : Green
@@ -28,10 +33,7 @@ const int errPin = 6;         // pin 6 connects to SMC ERR  : Blue
 
 
 // SMC motor limit IDs
-#define FORWARD_ACCELERATION 5
-#define FORWARD_DECELERATION 6
-#define REVERSE_ACCELERATION 9
-#define REVERSE_DECELERATION 10
+
 #define DECELERATION 2
 
 // Flags and counters
@@ -62,15 +64,16 @@ SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);
 
 void setup() {
 
+  // Enable LCD
+  lcd.begin();
+  lcd.noBacklight();
+  
   // Serial lines
   Serial.begin(9600);       // For serial monitor troubleshooting
   smcSerial.begin(19200);   // Begin serial to SMC
 
   // Reset SMC when Arduino starts up
   resetSMC();
-  
-  // clear the safe-start violation and let the motor run
-//  exitSafeStart();
   
   // Set the startup values
   shutterState=getInfo();
@@ -127,6 +130,9 @@ void loop() {
         setMotorSpeed(1600);
         Serial.print(shutterOpening);
         Serial.println("#");
+        lcd.backlight();
+        lcd.clear();
+        lcd.print("Roof opening...");
       }
       else
       {
@@ -143,6 +149,9 @@ void loop() {
         setMotorSpeed(-1600);
         Serial.print(shutterClosing);
         Serial.println("#");
+        lcd.backlight();
+        lcd.clear();
+        lcd.print("Roof closing...");        
       }
       else
       {
@@ -195,15 +204,24 @@ int getInfo()  //TODO Write This
   */
   if (errorStatus != 0)
   {
+    lcd.backlight();
+    lcd.clear();
+    lcd.print("Roof Error!");
+    lcd.setCursor(0,1);
+    lcd.print(errorStatus);
     return shutterError;
   }
   else if (currentSpeed == 0 && limitStatus == 128)
   {
+    lcd.clear();
+    lcd.noBacklight();
     return shutterOpen;
   }
 
   else if (currentSpeed == 0 && limitStatus == 256)
   {
+    lcd.clear();
+    lcd.noBacklight();
     return shutterClosed;
   }
 
@@ -217,10 +235,6 @@ int getInfo()  //TODO Write This
     return shutterClosing;
   }
 
-  else
-  {
-    return shutterError;
-  }
 } //end getInfo()
 
 // read an SMC serial byte
@@ -231,14 +245,15 @@ int readSMCByte()
   return (byte)c;
 }
 
-// required to allow motor to move
-// must be called when controller restarts and after any error
-/*
-void exitSafeStart()
+unsigned char setMotorLimit(unsigned char  limitID, unsigned int limitValue)
 {
-  smcSerial.write(0x83);
+  smcSerial.write(0xA2);
+  smcSerial.write(limitID);
+  smcSerial.write(limitValue & 0x7F);
+  smcSerial.write(limitValue >> 7);
+  return readSMCByte();
 }
-*/
+
 // speed should be a number from -3200 to 3200
 // TODO : I'll be using a set speed, so this can probbaly go away to save mem.
 void setMotorSpeed(int speed)
@@ -254,15 +269,6 @@ void setMotorSpeed(int speed)
   }
   smcSerial.write(speed & 0x1F);
   smcSerial.write(speed >> 5);
-}
-
-unsigned char setMotorLimit(unsigned char  limitID, unsigned int limitValue)
-{
-  smcSerial.write(0xA2);
-  smcSerial.write(limitID);
-  smcSerial.write(limitValue & 0x7F);
-  smcSerial.write(limitValue >> 7);
-  return readSMCByte();
 }
 
 // returns the specified variable as an unsigned integer.
@@ -287,11 +293,5 @@ void resetSMC()
 
   // Set up motor controller.
   smcSerial.write(0xAA);  // send baud-indicator byte
-  setMotorLimit(FORWARD_ACCELERATION, 100);
-  setMotorLimit(REVERSE_ACCELERATION, 100);
-  setMotorLimit(FORWARD_DECELERATION, 100);
-  setMotorLimit(REVERSE_DECELERATION, 100);
-  setMotorLimit(DECELERATION, 3);
-
 }
 

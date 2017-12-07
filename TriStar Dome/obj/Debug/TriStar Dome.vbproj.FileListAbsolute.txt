@@ -2,6 +2,7 @@ D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Debug\TriStar Dome.dll.
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Debug\TriStar Dome.dll
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Debug\TriStar Dome.pdb
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Debug\TriStar Dome.tlb
+D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Debug\TriStar Dome.vbprojResolveAssemblyReference.cache
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Debug\ASCOM.TriStar.Resources.resources
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Debug\ASCOM.TriStar.SetupDialogForm.resources
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Debug\TriStar Dome.vbproj.GenerateResource.Cache

@@ -10,14 +10,11 @@
  *  0.1.0       2017DEC04   EOR   Initial build
  *  0.2.0       2017DEC05   EOR   Expand shutterState handling, code getInfo and resetSMC as functions
  *  1.0.0       2017DEC05   EOR   Initial working build, tested in VS and SGP
- *  1.0.1       2917DEC06   EOR   Clean up some unnecessary code to set motor limits that can be written to SMC's NVRAM
+ *  1.0.1       2017DEC06   EOR   Clean up some unnecessary code to set motor limits that can be written to SMC's NVRAM
+ *  1.1.0       2017DEC07   EOR   Remove LCD stuff.  It's dumb.
  **************************************************************************/
  
 #include <SoftwareSerial.h>
-#include <Wire.h> 
-#include <LiquidCrystal_I2C.h>
-
-LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 // Pololu SMC config
 const int rxPin = 3;          // pin 3 connects to SMC TX   : Green
@@ -63,11 +60,6 @@ SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);
 //***** Main Setup() and Loop() functions *****//
 
 void setup() {
-
-  // Enable LCD
-  lcd.begin();
-  lcd.noBacklight();
-  
   // Serial lines
   Serial.begin(9600);       // For serial monitor troubleshooting
   smcSerial.begin(19200);   // Begin serial to SMC
@@ -122,7 +114,7 @@ void loop() {
       setMotorLimit(DECELERATION, 3);
     }
 
-    if (strCmd == "open")
+    else if (strCmd == "open")
     {
       if (shutterState == shutterClosed)
       {
@@ -130,9 +122,6 @@ void loop() {
         setMotorSpeed(1600);
         Serial.print(shutterOpening);
         Serial.println("#");
-        lcd.backlight();
-        lcd.clear();
-        lcd.print("Roof opening...");
       }
       else
       {
@@ -141,7 +130,7 @@ void loop() {
       }
     }
 
-    if (strCmd == "clos")
+    else if (strCmd == "clos")
     {
       if (shutterState == shutterOpen)
       {
@@ -149,9 +138,6 @@ void loop() {
         setMotorSpeed(-1600);
         Serial.print(shutterClosing);
         Serial.println("#");
-        lcd.backlight();
-        lcd.clear();
-        lcd.print("Roof closing...");        
       }
       else
       {
@@ -160,7 +146,7 @@ void loop() {
       }      
     }
 
-    if (strCmd == "info")
+    else if (strCmd == "info")
     {
       if (debugFlag)
       {
@@ -175,7 +161,7 @@ void loop() {
       Serial.println("#");
     }
 
-    if (strCmd == "reset")
+    else if (strCmd == "reset")
     {
       resetSMC();
       //exitSafeStart();
@@ -204,25 +190,16 @@ int getInfo()  //TODO Write This
   */
   if (errorStatus != 0)
   {
-    lcd.backlight();
-    lcd.clear();
-    lcd.print("Roof Error!");
-    lcd.setCursor(0,1);
-    lcd.print(errorStatus);
     return shutterError;
   }
   else if (currentSpeed == 0 && limitStatus == 128)
   {
-    lcd.clear();
-    lcd.noBacklight();
     return shutterOpen;
   }
 
   else if (currentSpeed == 0 && limitStatus == 256)
   {
-    lcd.clear();
-    lcd.noBacklight();
-    return shutterClosed;
+      return shutterClosed;
   }
 
   else if (currentSpeed > 0 && (limitStatus == 0 || limitStatus == 144))

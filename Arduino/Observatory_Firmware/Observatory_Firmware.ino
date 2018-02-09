@@ -3,6 +3,7 @@
  * 2017DEC04 - EOR : EorEquis@tristarobservatory.space
  * v1.0b
  * 
+ * 
  * Not much to do here.  The ROR is treated as an ASCOM "shutter" in a Dome driver.
  * We pretty much just need to open and close the thing.
  * 
@@ -12,6 +13,7 @@
  *  1.0.0       2017DEC05   EOR   Initial working build, tested in VS and SGP
  *  1.0.1       2017DEC06   EOR   Clean up some unnecessary code to set motor limits that can be written to SMC's NVRAM
  *  1.1.0       2017DEC07   EOR   Remove LCD stuff.  It's dumb.
+ *  1.1.1       2018FEB09   EOR   Slow the roof down, re-order status checks to not return error on connect
  **************************************************************************/
  
 #include <SoftwareSerial.h>
@@ -119,7 +121,7 @@ void loop() {
       if (shutterState == shutterClosed)
       {
         //exitSafeStart();
-        setMotorSpeed(1600);
+        setMotorSpeed(1400);
         Serial.print(shutterOpening);
         Serial.println("#");
       }
@@ -135,9 +137,11 @@ void loop() {
       if (shutterState == shutterOpen)
       {
         //exitSafeStart();
-        setMotorSpeed(-1600);
+        setMotorSpeed(-1400);
         Serial.print(shutterClosing);
         Serial.println("#");
+
+      
       }
       else
       {
@@ -188,11 +192,7 @@ int getInfo()  //TODO Write This
     errorStatus = getSMCVariable(ERROR_STATUS);
   }
   */
-  if (errorStatus != 0)
-  {
-    return shutterError;
-  }
-  else if (currentSpeed == 0 && limitStatus == 128)
+  if (currentSpeed == 0 && limitStatus == 128)
   {
     return shutterOpen;
   }
@@ -211,7 +211,10 @@ int getInfo()  //TODO Write This
   {
     return shutterClosing;
   }
-
+  else if (errorStatus != 0)
+  {
+    return shutterError;
+  }
 } //end getInfo()
 
 // read an SMC serial byte

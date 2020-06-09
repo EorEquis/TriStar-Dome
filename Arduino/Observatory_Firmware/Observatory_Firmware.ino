@@ -126,40 +126,20 @@ void loop() {
       *******************************************************/
       if (strCmd == "abrt")
         {
-          setMotorLimit(DECELERATION, 0);
-          setMotorSpeed(0);
-          setMotorLimit(DECELERATION, 3);
+          abortRoof();
         }   
   
       else if (strCmd == "open")
         {
-          if (shutterState == shutterClosed)
-          {
-            setMotorSpeed(motorSpeed);
-            Serial.print(shutterOpening);
-            Serial.println("#");
-          }
-          else
-          {
-            Serial.print(shutterError);
-            Serial.println("#");
-          }
+          Serial.print(openRoof());
+          Serial.println("#");
         }
 
-    else if (strCmd == "clos")
-      {
-        if (shutterState == shutterOpen)
-          {
-            setMotorSpeed(-1 * motorSpeed);
-            Serial.print(shutterClosing);
-            Serial.println("#");
-          }
-        else
-          {
-            Serial.print(shutterError);
-            Serial.println("#");
-          }      
-      }
+      else if (strCmd == "clos")
+        {
+          Serial.print(closeRoof());
+          Serial.println("#");     
+        }
 
     else if (strCmd == "info")
       {

@@ -57,6 +57,8 @@
   int currentSpeed = 0;
   int targetSpeed = 0;
   int shutterState = 1;
+  int buttonState = 0;
+  const int motorSpeed = 1400;
 
 // SoftwareSerial for communication w/ SMC
   SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);
@@ -78,7 +80,10 @@ void setup() {
   
   // Begin tracking elapsed time for getInfo()
     currentMillis=millis();
-    lastMillis=currentMillis;  
+    lastMillis=currentMillis;
+
+  // Set up pins
+    pinMode(buttonPin, INPUT);
 
 }   // end setup()
 
@@ -89,7 +94,12 @@ void loop() {
     if (currentMillis - lastMillis > 500)
       {
         lastMillis=currentMillis;
-        shutterState=getInfo();  
+        shutterState=getInfo();
+        buttonState = digitalRead(buttonPin);
+        if (buttonState==HIGH)
+          {
+            handleButton();
+          }
         if (debugFlag)
           {
             Serial.print("getInfo() called, shutterState is ");
@@ -125,8 +135,7 @@ void loop() {
         {
           if (shutterState == shutterClosed)
           {
-            //exitSafeStart();
-            setMotorSpeed(1400);
+            setMotorSpeed(motorSpeed);
             Serial.print(shutterOpening);
             Serial.println("#");
           }
@@ -141,8 +150,7 @@ void loop() {
       {
         if (shutterState == shutterOpen)
           {
-            //exitSafeStart();
-            setMotorSpeed(-1400);
+            setMotorSpeed(-1 * motorSpeed);
             Serial.print(shutterClosing);
             Serial.println("#");
           }
@@ -171,9 +179,6 @@ void loop() {
     else if (strCmd == "reset")
       {
         resetSMC();
-        //exitSafeStart();
       }
   }
 } // End loop()
-
-//***** Program Functions *****//

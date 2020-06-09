@@ -35,6 +35,18 @@ int getInfo()  //TODO Write This
       return shutterClosing;
     }
 
+  else if (currentSpeed == 0 && limitStatus == 0 && buttonPressed)
+    // Roof is not moving, neither limit switch is active, and the button was pressed.  We have intentionally halted the roof "in between"
+    {
+      return shutterOpen;
+    }
+
+  else if (currentSpeed == 0 && limitStatus == 0 && buttonPressed == false)
+    // Roof is not moving, neither limit switch is active, and the button was not pressed.  Oh shit.
+    {
+      return shutterError;
+    }
+    
   else if (errorStatus != 0)
     {
       return shutterError;

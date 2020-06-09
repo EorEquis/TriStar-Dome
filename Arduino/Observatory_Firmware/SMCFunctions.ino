@@ -16,7 +16,7 @@ unsigned char setMotorLimit(unsigned char  limitID, unsigned int limitValue)
   }
 
 // speed should be a number from -3200 to 3200
-// TODO : I'll be using a set speed, so this can probbaly go away to save mem.
+
 void setMotorSpeed(int speed)
   {
     if (speed < 0)

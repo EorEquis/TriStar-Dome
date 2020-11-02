@@ -59,7 +59,7 @@
   int targetSpeed = 0;
   int shutterState = 1;
   int buttonState = 0;
-  const int motorSpeed = 1400;
+  const int motorSpeed = 2800;
   int infoDelay = 1000;
   int buttonDelay = 1000;
   bool buttonPressed = false;

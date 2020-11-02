@@ -1,7 +1,7 @@
 // Pololu SMC config
   const int rxPin = 3;          // pin 3 connects to SMC TX   : Green
   const int txPin = 4;          // pin 4 connects to SMC RX   : Orange
-  const int resetPin = 5;       // pin 5 connects to SMC nRST : Brown
+  const int resetPin = 5;       // pin 5 connects to SMC nRST : Grey
   const int errPin = 6;         // pin 6 connects to SMC ERR  : Blue
 
 // Other Pins
@@ -17,6 +17,27 @@
 // SMC motor limit IDs
   #define DECELERATION 2
 
+// Motor State Values
+
+  #define STOPPED 1         // targetSpeed = 0, currentSpeed = 0
+  #define MOVING 2          // targetSpeed = currentSpeed
+  #define ACCELERATING 3    // targetSpeed > currentSpeed
+  #define DECELERATING 4    // targetSpeed < currentSpeed
+  #define DIRECTIONOPEN 1   // 1 : Positive motor speed opens roof.  -1 : Negative motor speed opens roof
+
+/** Limit Variable Bits
+    Bit 0: Motor is not allowed to run due to an error or safe-start violation.
+    Bit 4: Motor speed is not equal to target speed because of acceleration, deceleration, or brake duration limits.
+    Bit 7: AN1 limit/kill switch is active (scaled value ≥ 1600).
+    Bit 8: AN2 limit/kill switch is active (scaled value ≥ 1600).
+**/
+
+  #define ERRORBIT 0
+  #define SPEEDMISMATCH 4
+  #define OPENLIMIT 8
+  #define CLOSEDLIMIT 7
+  
+  
 // Flags and counters
   unsigned long lastMillis = 0;
   unsigned long currentMillis = 0;
@@ -39,9 +60,12 @@
   int shutterState = 1;
   int buttonState = 0;
   const int motorSpeed = 1400;
-  int infoDelay = 500;
+  int infoDelay = 1000;
   int buttonDelay = 1000;
   bool buttonPressed = false;
+  int motorState = 0;
+  bool closedLimitSwitch = false;
+  bool openLimitSwitch = false;
 
 // SoftwareSerial for communication w/ SMC
   SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);

@@ -15,6 +15,7 @@
  *  1.1.0       2017DEC07   EOR   Remove LCD stuff.  It's dumb.
  *  1.1.1       2018FEB09   EOR   Slow the roof down, re-order status checks to not return error on connect
  *  2.0.0       2020JUN09   EOR   Sparta Obs Version, cleanup, add pushbutton
+ *  2.1.0       2020NOV02   EOR   Modify for new SMC G2, final testing before obs install
  **************************************************************************/
  
 #include <SoftwareSerial.h>
@@ -70,6 +71,8 @@ void loop() {
             Serial.println(errorStatus);
             Serial.print("currentSpeed : ");
             Serial.println(currentSpeed);
+            Serial.print("targetSpeed : ");
+            Serial.println(targetSpeed);            
         #endif 
       }   // end if millis
 

@@ -44,11 +44,12 @@ int getSMCVariable(unsigned char variableID)
 
 void resetSMC()
   {
+    /** For some reason, this now breaks the new SMC...it seems to never come out of reset mode.  2020-11-02
     pinMode(resetPin, OUTPUT);
     digitalWrite(resetPin, LOW);  // reset SMC
     delay(1);  // wait 1 ms
     pinMode(resetPin, INPUT);  // let SMC run again
-  
+  **/
     // must wait at least 1 ms after reset before transmitting
     delay(10);
   

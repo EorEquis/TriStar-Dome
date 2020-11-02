@@ -30,7 +30,7 @@
   #define shutterError 4
 
 // Other variables
-  //  #define DEBUG   // Uncomment to allow debug printout to serial
+  #define DEBUG   // Uncomment to allow debug printout to serial
   String strCmd;
   unsigned int limitStatus = 0;
   unsigned int errorStatus = 0;

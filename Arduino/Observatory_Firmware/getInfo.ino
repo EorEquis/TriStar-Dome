@@ -1,4 +1,4 @@
-int getInfo()  //TODO Write This
+int getInfo()  
 {
   limitStatus = getSMCVariable(LIMIT_STATUS);
   errorStatus = getSMCVariable(ERROR_STATUS);
@@ -29,38 +29,38 @@ int getInfo()  //TODO Write This
 
   if (motorState == STOPPED && bitRead(limitStatus, OPENLIMIT) == 1)
     {
-      return shutterOpen;
+      return SHUTTEROPEN;
     }
 
   else if (motorState == STOPPED && bitRead(limitStatus, CLOSEDLIMIT) == 1)
     {
-        return shutterClosed;
+        return SHUTTERCLOSED;
     }
 
   else if (targetSpeed * DIRECTIONOPEN > 0 || currentSpeed * DIRECTIONOPEN > 0)
     {
-      return shutterOpening;
+      return SHUTTEROPENING;
     }
   
   else if (targetSpeed * DIRECTIONOPEN < 0 || currentSpeed * DIRECTIONOPEN < 0)
     {
-      return shutterClosing;
+      return SHUTTERCLOSING;
     }
 
   else if ((motorState == DECELERATING || motorState == STOPPED) && (bitRead(limitStatus, OPENLIMIT) == 0 && bitRead(limitStatus, CLOSEDLIMIT) == 0) && buttonPressed)
     // Roof is not moving or is decelerating, neither limit switch is active, and the button was pressed.  We have intentionally halted the roof "in between"
     {
-      return shutterOpen;
+      return SHUTTEROPEN;
     }
 
   else if ((motorState == DECELERATING || motorState == STOPPED) && (bitRead(limitStatus, OPENLIMIT) == 0 && bitRead(limitStatus, CLOSEDLIMIT) == 0) && buttonPressed == false)
     // Roof is not moving or is decelerating, neither limit switch is active, and the button was not pressed.  Oh shit.
     {
-      return shutterError;
+      return SHUTTERERROR;
     }
     
   else if (errorStatus != 0)
     {
-      return shutterError;
+      return SHUTTERERROR;
     }
 } //end getInfo()

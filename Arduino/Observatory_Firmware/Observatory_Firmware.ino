@@ -94,14 +94,26 @@ void loop() {
   
       else if (strCmd == "open")
         {
-          Serial.print(openRoof());
-          Serial.println("#");
+          if (openRoof() == 0)
+            {
+              shutterState = SHUTTEROPENING;
+              lastMillis=currentMillis;
+            }
+          // shutterState = SHUTTEROPENING;
+          // Serial.print(openRoof());
+          // Serial.println("#");
         }
 
       else if (strCmd == "clos")
         {
-          Serial.print(closeRoof());
-          Serial.println("#");     
+          if (closeRoof() == 0)
+            {
+              shutterState = SHUTTERCLOSING;
+              lastMillis=currentMillis;
+            }
+          
+          // Serial.print(closeRoof());
+          // Serial.println("#");     
         }
 
     else if (strCmd == "info")

@@ -44,14 +44,14 @@
   unsigned long lastButton = 0;
 
 // ASCOM ShutterState Enumeration : http://www.ascom-standards.org/Help/Developer/html/T_ASCOM_DeviceInterface_ShutterState.htm
-  #define shutterOpen 0
-  #define shutterClosed 1
-  #define shutterOpening 2
-  #define shutterClosing 3
-  #define shutterError 4
+  #define SHUTTEROPEN 0
+  #define SHUTTERCLOSED 1
+  #define SHUTTEROPENING 2
+  #define SHUTTERCLOSING 3
+  #define SHUTTERERROR 4
 
 // Other variables
-  #define DEBUG   // Uncomment to allow debug printout to serial
+  // #define DEBUG   // Uncomment to allow debug printout to serial
   String strCmd;
   unsigned int limitStatus = 0;
   unsigned int errorStatus = 0;
@@ -66,6 +66,7 @@
   int motorState = 0;
   bool closedLimitSwitch = false;
   bool openLimitSwitch = false;
+  
 
 // SoftwareSerial for communication w/ SMC
   SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);

@@ -1,26 +1,30 @@
 int openRoof()
   {
-    if (shutterState == shutterClosed)
+    if (shutterState == SHUTTERCLOSED)
       {
         setMotorSpeed(motorSpeed);
-        return shutterOpening;
+        return 0;               // Success, opening roof
+        //return SHUTTEROPENING;
       }
       else
       {
-        return shutterError;
+        return 1;               // Error, roof is not closed, cannot be opened.
+        //return SHUTTERERROR;
       }
   }
 
 int closeRoof()
   {
-    if (shutterState == shutterOpen)
+    if (shutterState == SHUTTEROPEN)
       {
         setMotorSpeed(-1 * motorSpeed);
-        return shutterClosing;
+        return 0;               // Success, closing roof.
+        //return SHUTTERCLOSING;
       }
     else
       {
-        return shutterError;
+        return 1;               // Error, roof is not open, cannot be closed.
+        //return SHUTTERERROR;
       }     
   }
 

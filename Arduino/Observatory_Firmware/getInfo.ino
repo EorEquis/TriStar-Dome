@@ -32,7 +32,7 @@ int getInfo()
       return SHUTTERERROR;
     }
     
-  else if (bitRead(limitStatus, OPENLIMIT) == 1 && bitRead(limitStatus, OPENLIMIT) == 1)
+  else if (bitRead(limitStatus, OPENLIMIT) == 1 && bitRead(limitStatus, CLOSEDLIMIT) == 1)
     {
       return SHUTTERERROR;
     }

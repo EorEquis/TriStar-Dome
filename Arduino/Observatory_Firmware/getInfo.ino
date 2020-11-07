@@ -27,7 +27,17 @@ int getInfo()
     
   // See https://www.pololu.com/docs/0J77/6.4 for Limit and Error Status flag registers
 
-  if (motorState == STOPPED && bitRead(limitStatus, OPENLIMIT) == 1)
+  if (errorStatus != 0)
+    {
+      return SHUTTERERROR;
+    }
+    
+  else if (bitRead(limitStatus, OPENLIMIT) == 1 && bitRead(limitStatus, OPENLIMIT) == 1)
+    {
+      return SHUTTERERROR;
+    }
+    
+  else if (motorState == STOPPED && bitRead(limitStatus, OPENLIMIT) == 1)
     {
       return SHUTTEROPEN;
     }
@@ -58,9 +68,5 @@ int getInfo()
     {
       return SHUTTERERROR;
     }
-    
-  else if (errorStatus != 0)
-    {
-      return SHUTTERERROR;
-    }
+
 } //end getInfo()

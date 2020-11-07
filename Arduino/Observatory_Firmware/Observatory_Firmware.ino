@@ -27,10 +27,10 @@ void setup() {
 
   // Serial lines
     Serial.begin(9600);       // For serial monitor troubleshooting
-    smcSerial.begin(19200);   // Begin serial to SMC
+    smcSerial.begin(9600);   // Begin serial to SMC
 
   // Reset SMC when Arduino starts up
-    resetSMC();
+    // resetSMC();
   
   // Set the startup values
     shutterState=getInfo();

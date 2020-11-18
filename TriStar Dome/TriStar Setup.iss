@@ -5,8 +5,8 @@
 [Setup]
 AppID={{17f30bf7-c90a-4d5b-b69f-3c44a44db8f2}
 AppName=ASCOM TriStar Dome Driver
-AppVerName=ASCOM TriStar Dome Driver 1.0.0
-AppVersion=1.0.0
+AppVerName=ASCOM TriStar Dome Driver 1.2.0
+AppVersion=1.2.0
 AppPublisher=EorEquis <EorEquis@tristarobservatory.space>
 AppPublisherURL=mailto:EorEquis@tristarobservatory.space
 AppSupportURL=http://tech.groups.yahoo.com/group/ASCOM-Talk/
@@ -17,7 +17,7 @@ DefaultDirName="{cf}\ASCOM\Dome"
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 OutputDir="."
-OutputBaseFilename="TriStar Setup"
+OutputBaseFilename="TriStar Dome Setup"
 Compression=lzma
 SolidCompression=yes
 ; Put there by Platform if Driver Installer Support selected
@@ -34,9 +34,9 @@ Name: "{cf}\ASCOM\Uninstall\Dome\TriStar"
 ; TODO: Add subfolders below {app} as needed (e.g. Name: "{app}\MyFolder")
 
 [Files]
-Source: "D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\bin\Release\TriStar Dome.dll"; DestDir: "{app}"
+Source: "D:\Dev\Git\TriStar-Dome\TriStar Dome\bin\Release\TriStar Dome.dll"; DestDir: "{app}"
 ; Require a read-me HTML to appear after installation, maybe driver's Help doc
-Source: "D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\TriStarDome_README.txt"; DestDir: "{app}"; Flags: isreadme
+Source: "D:\Dev\Git\TriStar-Dome\TriStar Dome\bin\Release\TriStarDome_README.txt"; DestDir: "{app}"; Flags: isreadme
 ; TODO: Add other files needed by your driver here (add subfolders above)
 
 

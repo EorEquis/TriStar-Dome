@@ -1,0 +1,87 @@
+Start-up ASCOM Device Conformance Checker - 64bit mode
+Start-up ASCOM Platform 6.5 SP1 - RC1 6.5.1.3174
+ 
+ 
+ConformanceCheck ASCOM Device Conformance Checker Version 6.5.7500.22515, Build time: 2020-07-14 13:30:30
+ConformanceCheck Running on: ASCOM Platform 6.5 SP1 - RC1 6.5.1.3174
+ 
+ConformanceCheck Driver ProgID: ASCOM.TriStar.Dome
+ 
+Error handling 
+Error number for "Not Implemented" is: 80040400
+Error number for "Invalid Value 1" is: 80040405
+Error number for "Value Not Set 1" is: 80040402
+Error number for "Value Not Set 2" is: 80040403
+Error messages will not be interpreted to infer state.
+ 
+14:47:57.551 Driver Access Checks              OK       
+14:47:58.274 AccessChecks                      OK       Successfully created driver using late binding
+14:48:03.350 AccessChecks                      OK       Successfully connected using late binding
+14:48:03.350 AccessChecks                      INFO     The driver is a .NET object
+14:48:03.365 AccessChecks                      INFO     The AssemblyQualifiedName is: ASCOM.TriStar.Dome, TriStar Dome, Version=1.0.0.0, Culture=neutral, PublicKe
+14:48:03.365 AccessChecks                      INFO     The driver implements interface: ASCOM.DeviceInterface.IDomeV2
+14:48:04.073 AccessChecks                      INFO     Device does not expose interface IDome
+14:48:09.149 AccessChecks                      INFO     Device exposes interface IDomeV2
+14:48:10.400 AccessChecks                      OK       Successfully created driver using driver access toolkit
+14:48:15.447 AccessChecks                      OK       Successfully connected using driver access toolkit
+ 
+Conform is using ASCOM.DriverAccess.Dome to get a Dome object
+14:48:16.745 ConformanceCheck                  OK       Driver instance created successfully
+14:48:21.864 ConformanceCheck                  OK       Connected OK
+ 
+Common Driver Methods 
+14:48:21.942 InterfaceVersion                  OK       2
+14:48:21.985 Connected                         OK       True
+14:48:22.032 Description                       OK       TriStar Dome
+14:48:22.079 DriverInfo                        OK       Information about the driver itself. Version: 1.0
+14:48:22.134 DriverVersion                     OK       1.0
+14:48:22.190 Name                              OK       TriStar Dome
+14:48:22.237 CommandString                     INFO     Conform cannot test the CommandString method
+14:48:22.246 CommandBlind                      INFO     Conform cannot test the CommandBlind method
+14:48:22.251 CommandBool                       INFO     Conform cannot test the CommandBool method
+14:48:22.252 Action                            INFO     Conform cannot test the Action method
+14:48:22.268 SupportedActions                  OK       Driver returned an empty action list
+ 
+Can Properties 
+14:48:22.378 CanFindHome                       OK       False
+14:48:22.428 CanPark                           OK       False
+14:48:22.481 CanSetAltitude                    OK       False
+14:48:22.528 CanSetAzimuth                     OK       False
+14:48:22.575 CanSetPark                        OK       False
+14:48:22.611 CanSetShutter                     OK       True
+14:48:22.658 CanSlave                          OK       False
+14:48:22.705 CanSyncAzimuth                    OK       False
+ 
+Pre-run Checks 
+14:48:23.112 DomeSafety                                 Attempting to open shutter as some tests may fail if it is closed...
+14:49:27.861 DomeSafety                        OK       Shutter status: shutterOpen
+ 
+Properties 
+14:49:27.929 Altitude                          OK       Optional member threw a PropertyNotImplementedException exception.
+14:49:27.976 AtHome                            OK       Optional member threw a PropertyNotImplementedException exception.
+14:49:28.024 AtPark                            OK       Optional member threw a PropertyNotImplementedException exception.
+14:49:28.063 Azimuth                           OK       Optional member threw a PropertyNotImplementedException exception.
+14:49:28.110 ShutterStatus                     OK       shutterOpen
+14:49:28.157 Slaved Read                       OK       False
+14:49:28.204 Slaved Write                      OK       Optional member threw a PropertyNotImplementedException exception.
+14:49:28.255 Slewing                           OK       False
+ 
+Methods 
+14:49:33.362 AbortSlew                         OK       AbortSlew command issued successfully
+14:49:33.409 SlewToAltitude                    OK       Optional member threw a MethodNotImplementedException exception.
+14:49:33.463 SlewToAzimuth                     OK       Optional member threw a MethodNotImplementedException exception.
+14:49:33.514 SyncToAzimuth                     OK       Optional member threw a MethodNotImplementedException exception.
+14:50:38.310 CloseShutter                      OK       Shutter closed successfully
+14:52:03.096 OpenShutter                       OK       Shutter opened successfully
+14:52:24.036 FindHome                          OK       Optional member threw a MethodNotImplementedException exception.
+14:52:24.083 Park                              OK       Optional member threw a MethodNotImplementedException exception.
+14:52:24.134 SetPark                           OK       Optional member threw a MethodNotImplementedException exception.
+ 
+Post-run Checks 
+14:52:24.259 DomeSafety                        INFO     Attempting to close shutter...
+14:53:29.125 DomeSafety                        OK       Shutter successfully closed
+14:53:29.125 DomeSafety                        INFO     CanPark is false - skipping dome parking
+ 
+Conformance test complete 
+ 
+No errors, warnings or issues found: your driver passes ASCOM validation!! 

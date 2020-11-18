@@ -98,6 +98,8 @@ void loop() {
             {
               shutterState = SHUTTEROPENING;
               lastMillis=currentMillis;
+              Serial.print(shutterState);
+              Serial.println("#");
             }
           // shutterState = SHUTTEROPENING;
           // Serial.print(openRoof());
@@ -110,6 +112,8 @@ void loop() {
             {
               shutterState = SHUTTERCLOSING;
               lastMillis=currentMillis;
+              Serial.print(shutterState);
+              Serial.println("#");
             }
           
           // Serial.print(closeRoof());

@@ -3,6 +3,7 @@ int openRoof()
     if (shutterState == SHUTTERCLOSED)
       {
         setMotorSpeed(motorSpeed);
+        shutterState = SHUTTEROPENING;
         return 0;               // Success, opening roof
         //return SHUTTEROPENING;
       }
@@ -18,6 +19,7 @@ int closeRoof()
     if (shutterState == SHUTTEROPEN)
       {
         setMotorSpeed(-1 * motorSpeed);
+        shutterState = SHUTTERCLOSING;
         return 0;               // Success, closing roof.
         //return SHUTTERCLOSING;
       }
@@ -30,7 +32,7 @@ int closeRoof()
 
 void abortRoof()
   {
-    setMotorLimit(DECELERATION, 0);
+    // setMotorLimit(DECELERATION, 0);
     setMotorSpeed(0);
-    setMotorLimit(DECELERATION, 3);
+    // setMotorLimit(DECELERATION, 3);
   }

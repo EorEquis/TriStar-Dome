@@ -76,7 +76,6 @@ Public Class Dome
     Private astroUtilities As AstroUtils ' Private variable to hold an AstroUtils object to provide the Range method
     Private TL As TraceLogger ' Private variable to hold the trace logger object (creates a diagnostic log file with information that you specify)
     Private objSerial As ASCOM.Utilities.Serial
-    Private varShutterState As ShutterState = ShutterState.shutterError
     Private statusTimer As System.Timers.Timer
 
     '
@@ -160,7 +159,7 @@ Public Class Dome
         ' TODO : Multithreading
         Try
             Dim response As String
-            CheckConnected("CommandString")
+            ' CheckConnected("CommandString")
             objSerial.Transmit(Command)
             response = objSerial.ReceiveTerminated("#")
             response = response.Replace("#", "")
@@ -189,7 +188,7 @@ Public Class Dome
                 objSerial.Port = CInt(portNum)
                 objSerial.Speed = SerialSpeed.ps9600
                 objSerial.Connected = True
-                varShutterState = getShutterState()
+                domeShutterState = getShutterState()
                 statusTimer.Enabled = True
             Else
                 connectedState = False
@@ -258,7 +257,7 @@ Public Class Dome
 
 #Region "IDome Implementation"
 
-    Private domeShutterState As Integer = 0 ' Variable to hold the status of the shutter
+    Private domeShutterState As Integer = 1 ' Variable to hold the status of the shutter
 
     Public Sub AbortSlew() Implements IDomeV2.AbortSlew
         CommandBlind("abrt#")
@@ -350,8 +349,9 @@ Public Class Dome
     End Property
 
     Public Sub CloseShutter() Implements IDomeV2.CloseShutter
-        domeShutterState = CommandString("clos#")
-        If domeShutterState = ShutterState.shutterClosing Then
+        domeShutterState = CInt(CommandString("clos#"))
+        If domeShutterState = 3 Then
+            ' If domeShutterState = ShutterState.shutterClosing Then
             TL.LogMessage("CloseShutter", "Shutter has been closed")
         Else
             TL.LogMessage("CloseShutter", "Error closing shutter")
@@ -364,8 +364,9 @@ Public Class Dome
     End Sub
 
     Public Sub OpenShutter() Implements IDomeV2.OpenShutter
-        domeShutterState = CommandString("open#")
-        If domeShutterState = ShutterState.shutterOpening Then
+        domeShutterState = CInt(CommandString("open#"))
+        If domeShutterState = 2 Then
+            ' If domeShutterState = ShutterState.shutterOpening Then
             TL.LogMessage("OpenShutter", "Shutter has been opened")
         Else
             TL.LogMessage("OpenShutter", "Error opening shutter")
@@ -384,7 +385,44 @@ Public Class Dome
 
     Public ReadOnly Property ShutterStatus() As ShutterState Implements IDomeV2.ShutterStatus
         Get
-            Return varShutterState
+            'Select Case domeShutterState
+            '    Case 0
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpen.ToString())
+            '        Return ShutterState.shutterOpen
+            '    Case 1
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosed.ToString())
+            '        Return ShutterState.shutterClosed
+            '    Case 2
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpening.ToString())
+            '        Return ShutterState.shutterOpening
+            '    Case 3
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosing.ToString())
+            '        Return ShutterState.shutterClosing
+            '    Case Else
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterError.ToString())
+            '        Return ShutterState.shutterError
+            'End Select
+
+            Select Case domeShutterState
+                Case 0
+                    TL.LogMessage("ShutterStatus", ShutterState.shutterOpen.ToString())
+                    Return ShutterState.shutterOpen
+                Case 1
+                    TL.LogMessage("ShutterStatus", ShutterState.shutterClosed.ToString())
+                    Return ShutterState.shutterClosed
+                Case 2
+                    TL.LogMessage("ShutterStatus", ShutterState.shutterOpening.ToString())
+                    Return ShutterState.shutterOpening
+                Case 3
+                    TL.LogMessage("ShutterStatus", ShutterState.shutterClosing.ToString())
+                    Return ShutterState.shutterClosing
+                Case 4
+                    TL.LogMessage("ShutterStatus", ShutterState.shutterError.ToString())
+                    Return ShutterState.shutterError
+                Case Else
+                    TL.LogMessage("ShutterStatus", "Communication error, domeShutterstate = " + domeShutterState.ToString)
+                    Return ShutterState.shutterError
+            End Select
         End Get
     End Property
 
@@ -504,28 +542,29 @@ Public Class Dome
 
 #Region "My Functions and methods"
     Private Function getShutterState() As ShutterState
-        domeShutterState = CommandString("info#")
-        Select Case domeShutterState
-            Case 0
-                TL.LogMessage("ShutterStatus", ShutterState.shutterOpen.ToString())
-                Return ShutterState.shutterOpen
-            Case 1
-                TL.LogMessage("ShutterStatus", ShutterState.shutterClosed.ToString())
-                Return ShutterState.shutterClosed
-            Case 2
-                TL.LogMessage("ShutterStatus", ShutterState.shutterOpening.ToString())
-                Return ShutterState.shutterOpening
-            Case 3
-                TL.LogMessage("ShutterStatus", ShutterState.shutterClosing.ToString())
-                Return ShutterState.shutterClosing
-            Case Else
-                TL.LogMessage("ShutterStatus", ShutterState.shutterError.ToString())
-                Return ShutterState.shutterError
-        End Select
+        Return CommandString("info#")
+
+        'Select Case domeShutterState
+        '    Case 0
+        '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpen.ToString())
+        '        Return ShutterState.shutterOpen
+        '    Case 1
+        '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosed.ToString())
+        '        Return ShutterState.shutterClosed
+        '    Case 2
+        '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpening.ToString())
+        '        Return ShutterState.shutterOpening
+        '    Case 3
+        '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosing.ToString())
+        '        Return ShutterState.shutterClosing
+        '    Case Else
+        '        TL.LogMessage("ShutterStatus", ShutterState.shutterError.ToString())
+        '        Return ShutterState.shutterError
+        'End Select
     End Function
 
     Private Sub Timer_Tick(source As Object, e As EventArgs)
-        varShutterState = getShutterState()
+        domeShutterState = CInt(getShutterState())
     End Sub
 #End Region
 

@@ -186,7 +186,7 @@ Public Class Dome
                 portNum = Right(comPort, Len(comPort) - 3)
                 objSerial = New ASCOM.Utilities.Serial
                 objSerial.Port = CInt(portNum)
-                objSerial.Speed = SerialSpeed.ps9600
+                objSerial.Speed = SerialSpeed.ps38400
                 objSerial.Connected = True
                 domeShutterState = getShutterState()
                 statusTimer.Enabled = True

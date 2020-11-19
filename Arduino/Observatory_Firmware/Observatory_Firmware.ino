@@ -16,6 +16,7 @@
  *  1.1.1       2018FEB09   EOR   Slow the roof down, re-order status checks to not return error on connect
  *  2.0.0       2020JUN09   EOR   Sparta Obs Version, cleanup, add pushbutton
  *  2.1.0       2020NOV02   EOR   Modify for new SMC G2, final testing before obs install
+ *  2.2.0       2020NOV19   EOR   Add handling for garbage serial, increase baud rates
  **************************************************************************/
  
 #include <SoftwareSerial.h>
@@ -26,11 +27,11 @@
 void setup() {
 
   // Serial lines
-    Serial.begin(9600);       // For serial monitor troubleshooting
-    smcSerial.begin(9600);   // Begin serial to SMC
+    Serial.begin(38400);       // For serial monitor troubleshooting
+    smcSerial.begin(38400);   // Begin serial to SMC
 
   // Reset SMC when Arduino starts up
-    // resetSMC();
+    resetSMC();
   
   // Set the startup values
     shutterState=getInfo();
@@ -87,6 +88,12 @@ void loop() {
        * info     :       Request from ASCOM for ShutterStatus
        * reset    :       Reset the SMC.  This is not an ASCOM method, but included for troubleshooting/testing
       *******************************************************/
+
+      // Flush anything that may be remaining, so we just handle the first # terminated string we saw.
+      while(Serial.available() > 0) {
+        char t = Serial.read();
+      }
+      
       if (strCmd == "abrt")
         {
           abortRoof();
@@ -138,5 +145,10 @@ void loop() {
       {
         resetSMC();
       }
+    else
+      {
+        strCmd = "";   // Must have been garbage, throw it away
+      }
+    
   }
 } // End loop()

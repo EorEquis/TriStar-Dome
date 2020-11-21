@@ -17,6 +17,8 @@
  *  2.0.0       2020JUN09   EOR   Sparta Obs Version, cleanup, add pushbutton
  *  2.1.0       2020NOV02   EOR   Modify for new SMC G2, final testing before obs install
  *  2.2.0       2020NOV19   EOR   Add handling for garbage serial, increase baud rates
+ *  2.3.0       2020NOV21   EOR   Pretty sure the button code and lack of a pulldown resistor is causing roof issues, because I am an idiot.
+ *                                Adding #DEF and IFDEF to button code
  **************************************************************************/
  
 #include <SoftwareSerial.h>
@@ -41,7 +43,9 @@ void setup() {
     lastMillis=currentMillis;
 
   // Set up pins
-    pinMode(buttonPin, INPUT);
+    #ifdef USEBUTTON
+      pinMode(buttonPin, INPUT);
+    #endif
 
 }   // end setup()
 
@@ -53,16 +57,18 @@ void loop() {
       {
         lastMillis=currentMillis;
         shutterState=getInfo();
-        buttonState = digitalRead(buttonPin);
-        if (buttonState==HIGH)
-          {
-            if (currentMillis - lastButton > buttonDelay)   // debounce button for buttonDelay
-              {
-                lastButton=millis();
-                buttonPressed = true;
-                handleButton();                
-              }
-          }
+        #ifdef USEBUTTON
+          buttonState = digitalRead(buttonPin);
+          if (buttonState==HIGH)
+            {
+              if (currentMillis - lastButton > buttonDelay)   // debounce button for buttonDelay
+                {
+                  lastButton=millis();
+                  buttonPressed = true;
+                  handleButton();                
+                }
+            }
+        #endif
         #ifdef DEBUG
             Serial.print("getInfo() called, shutterState is ");
             Serial.println(shutterState);

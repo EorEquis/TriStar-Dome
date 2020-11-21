@@ -57,16 +57,24 @@ int getInfo()
       return SHUTTERCLOSING;
     }
 
-  else if ((motorState == DECELERATING || motorState == STOPPED) && (bitRead(limitStatus, OPENLIMIT) == 0 && bitRead(limitStatus, CLOSEDLIMIT) == 0) && buttonPressed)
-    // Roof is not moving or is decelerating, neither limit switch is active, and the button was pressed.  We have intentionally halted the roof "in between"
-    {
-      return SHUTTEROPEN;
-    }
+  #ifdef USEBUTTON
+    else if ((motorState == DECELERATING || motorState == STOPPED) && (bitRead(limitStatus, OPENLIMIT) == 0 && bitRead(limitStatus, CLOSEDLIMIT) == 0) && buttonPressed)
+      // Roof is not moving or is decelerating, neither limit switch is active, and the button was pressed.  We have intentionally halted the roof "in between"
+      {
+        return SHUTTEROPEN;
+      }
 
-  else if ((motorState == DECELERATING || motorState == STOPPED) && (bitRead(limitStatus, OPENLIMIT) == 0 && bitRead(limitStatus, CLOSEDLIMIT) == 0) && buttonPressed == false)
-    // Roof is not moving or is decelerating, neither limit switch is active, and the button was not pressed.  Oh shit.
-    {
-      return SHUTTERERROR;
-    }
+    else if ((motorState == DECELERATING || motorState == STOPPED) && (bitRead(limitStatus, OPENLIMIT) == 0 && bitRead(limitStatus, CLOSEDLIMIT) == 0) && buttonPressed == false)
+      // Roof is not moving or is decelerating, neither limit switch is active, and the button was not pressed.  Oh shit.
+      {
+        return SHUTTERERROR;
+      }
+  #else
+    else if ((motorState == DECELERATING || motorState == STOPPED) && (bitRead(limitStatus, OPENLIMIT) == 0 && bitRead(limitStatus, CLOSEDLIMIT) == 0))
+      // Roof is not moving or is decelerating, neither limit switch is active.  Oh shit.
+      {
+        return SHUTTERERROR;
+      }
+  #endif
 
 } //end getInfo()

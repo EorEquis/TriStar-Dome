@@ -112,9 +112,9 @@ Partial Class SetupDialogForm
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(76, 15)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(41, 13)
+        Me.Label1.Size = New System.Drawing.Size(47, 13)
         Me.Label1.TabIndex = 10
-        Me.Label1.Text = "V 1.2.0"
+        Me.Label1.Text = "V 3.0.0b"
         '
         'SetupDialogForm
         '

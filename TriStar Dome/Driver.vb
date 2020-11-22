@@ -61,11 +61,13 @@ Public Class Dome
     '
     Friend Shared driverID As String = "ASCOM.TriStar.Dome"
     Private Shared driverDescription As String = "TriStar Dome"
+    Private Shared strDriverVersion As String = "3.0.0b"
 
     Friend Shared comPortProfileName As String = "COM Port" 'Constants used for Profile persistence
     Friend Shared traceStateProfileName As String = "Trace Level"
     Friend Shared comPortDefault As String = "COM1"
     Friend Shared traceStateDefault As String = "False"
+
 
     Friend Shared comPort As String ' Variables to hold the currrent device configuration
     Friend Shadows portNum As String
@@ -181,21 +183,21 @@ Public Class Dome
             End If
 
             If value Then
-                connectedState = True
                 TL.LogMessage("Connected Set", "Connecting to port " + comPort)
                 portNum = Right(comPort, Len(comPort) - 3)
                 objSerial = New ASCOM.Utilities.Serial
                 objSerial.Port = CInt(portNum)
                 objSerial.Speed = SerialSpeed.ps38400
                 objSerial.Connected = True
-                domeShutterState = getShutterState()
                 statusTimer.Enabled = True
+                wait(500)      ' Give the arduino a moment to get connected.
+                connectedState = True
             Else
-                connectedState = False
                 TL.LogMessage("Connected Set", "Disconnecting from port " + comPort)
                 objSerial.Connected = False
                 objSerial = Nothing
                 statusTimer.Enabled = False
+                connectedState = False
             End If
         End Set
     End Property
@@ -213,7 +215,7 @@ Public Class Dome
         Get
             Dim m_version As Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
             ' TODO customise this driver description
-            Dim s_driverInfo As String = "Information about the driver itself. Version: " + m_version.Major.ToString() + "." + m_version.Minor.ToString()
+            Dim s_driverInfo As String = "Information about the driver itself. Version: " + strDriverVersion
             TL.LogMessage("DriverInfo Get", s_driverInfo)
             Return s_driverInfo
         End Get
@@ -222,8 +224,8 @@ Public Class Dome
     Public ReadOnly Property DriverVersion() As String Implements IDomeV2.DriverVersion
         Get
             ' Get our own assembly and report its version number
-            TL.LogMessage("DriverVersion Get", Reflection.Assembly.GetExecutingAssembly.GetName.Version.ToString(2))
-            Return Reflection.Assembly.GetExecutingAssembly.GetName.Version.ToString(2)
+            TL.LogMessage("DriverVersion Get", strDriverVersion)
+            Return strDriverVersion
         End Get
     End Property
 
@@ -543,29 +545,22 @@ Public Class Dome
 #Region "My Functions and methods"
     Private Function getShutterState() As ShutterState
         Return CommandString("info#")
-
-        'Select Case domeShutterState
-        '    Case 0
-        '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpen.ToString())
-        '        Return ShutterState.shutterOpen
-        '    Case 1
-        '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosed.ToString())
-        '        Return ShutterState.shutterClosed
-        '    Case 2
-        '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpening.ToString())
-        '        Return ShutterState.shutterOpening
-        '    Case 3
-        '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosing.ToString())
-        '        Return ShutterState.shutterClosing
-        '    Case Else
-        '        TL.LogMessage("ShutterStatus", ShutterState.shutterError.ToString())
-        '        Return ShutterState.shutterError
-        'End Select
     End Function
 
     Private Sub Timer_Tick(source As Object, e As EventArgs)
         domeShutterState = CInt(getShutterState())
     End Sub
+
+    Private Sub wait(ByVal interval As Integer)
+        ' Delays interval milliseconds, without blocking the UI
+        Dim sw As New Stopwatch
+        sw.Start()
+        Do While sw.ElapsedMilliseconds < interval
+            Application.DoEvents()
+        Loop
+        sw.Stop()
+    End Sub
+
 #End Region
 
 End Class

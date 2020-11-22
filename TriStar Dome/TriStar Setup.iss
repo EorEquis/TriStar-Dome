@@ -5,8 +5,8 @@
 [Setup]
 AppID={{17f30bf7-c90a-4d5b-b69f-3c44a44db8f2}
 AppName=ASCOM TriStar Dome Driver
-AppVerName=ASCOM TriStar Dome Driver 1.2.0
-AppVersion=1.2.0
+AppVerName=ASCOM TriStar Dome Driver 3.0.0b
+AppVersion=3.0.0b
 AppPublisher=EorEquis <EorEquis@tristarobservatory.space>
 AppPublisherURL=mailto:EorEquis@tristarobservatory.space
 AppSupportURL=http://tech.groups.yahoo.com/group/ASCOM-Talk/

@@ -14,3 +14,4 @@ D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\ASCOM.TriStar.SetupDialogForm.r
 D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.vbproj.GenerateResource.Cache
 D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.dll
 D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.pdb
+D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.vbprojResolveAssemblyReference.cache

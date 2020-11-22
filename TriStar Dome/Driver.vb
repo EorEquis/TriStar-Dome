@@ -552,7 +552,7 @@ Public Class Dome
     End Sub
 
     Private Sub wait(ByVal interval As Integer)
-        ' Delays interval milliseconds, without blocking the UI
+        '  Delays interval milliseconds, without blocking the UI
         Dim sw As New Stopwatch
         sw.Start()
         Do While sw.ElapsedMilliseconds < interval

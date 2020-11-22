@@ -1,24 +1,40 @@
+#include <SoftwareSerial.h>
+
 // #defines
-  // #define DEBUG   // Uncomment to allow debug printout to serial
+  #define DEBUG   // Uncomment to allow debug printout to serial
   // #define USEBUTTON    // Uncomment to allow use of manual open/close button
-  
+  #define LOGGING         // Uncomment to support SD Shield w/ RTC and logging to SD Card.
+
+// Setup for SD Card shield
+  #ifdef LOGGING
+    #include <SD.h>
+    #include <RTClib.h>
+    const int chipSelect = 10;  // Digital pin 10 for the SD cs line
+    DateTime now;    
+    RTC_DS1307 RTC;             // Real Time Clock object
+    File logfile;               // Logging file
+  #endif
+
+//  Setup for button
+  #ifdef USEBUTTON
+    const int buttonPin = 7;      // pin 7 connects to button   : Yellow
+    unsigned long lastButton = 0; // Counter for last button press
+    int buttonState = 0;          // Current sate of button
+    int buttonDelay = 1000;       // Debounce delay
+    bool buttonPressed = false; 
+  #endif
+      
 // Pololu SMC config
   const int rxPin = 3;          // pin 3 connects to SMC TX   : Green
   const int txPin = 4;          // pin 4 connects to SMC RX   : Orange
   const int resetPin = 5;       // pin 5 connects to SMC nRST : Grey
   const int errPin = 6;         // pin 6 connects to SMC ERR  : Blue
 
-// Other Pins
-  #ifdef USEBUTTON
-    const int buttonPin = 7;      // pin 7 connects to button   : Yellow
-  #endif
-  
 // SMC Variable IDs
   #define ERROR_STATUS 0
   #define LIMIT_STATUS 3
   #define TARGET_SPEED 20
   #define SPEED 21
-
 
 // SMC motor limit IDs
   #define DECELERATION 2
@@ -43,13 +59,9 @@
   #define OPENLIMIT 8
   #define CLOSEDLIMIT 7
   
-  
 // Flags and counters
   unsigned long lastMillis = 0;
   unsigned long currentMillis = 0;
-  #ifdef USEBUTTON
-    unsigned long lastButton = 0;
-  #endif
   
 // ASCOM ShutterState Enumeration : http://www.ascom-standards.org/Help/Developer/html/T_ASCOM_DeviceInterface_ShutterState.htm
   #define SHUTTEROPEN 0
@@ -57,9 +69,6 @@
   #define SHUTTEROPENING 2
   #define SHUTTERCLOSING 3
   #define SHUTTERERROR 4
-
-// Real Time Clock object
-  RTC_DS1307 RTC;
 
 // Other variables
   String strCmd;
@@ -73,15 +82,6 @@
   int motorState = 0;
   bool closedLimitSwitch = false;
   bool openLimitSwitch = false;
-  const int chipSelect = 10;  //digital pin 10 for the SD cs line
-  #ifdef USEBUTTON
-    int buttonState = 0;
-    int buttonDelay = 1000;
-    bool buttonPressed = false;
-  #endif
-
-// Logging file
-  File logfile;
 
 // SoftwareSerial for communication w/ SMC
   SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);

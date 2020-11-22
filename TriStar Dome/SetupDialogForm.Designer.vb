@@ -144,7 +144,7 @@ Partial Class SetupDialogForm
     End Sub
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents OK_Button As System.Windows.Forms.Button
-	Friend WithEvents Cancel_Button As System.Windows.Forms.Button
+    Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Private WithEvents label2 As System.Windows.Forms.Label
     Friend WithEvents chkTrace As System.Windows.Forms.CheckBox

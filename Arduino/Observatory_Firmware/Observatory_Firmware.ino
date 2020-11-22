@@ -22,11 +22,7 @@
  *  3.0.0       2020NOV21   EOR   3.x branch, port to Arduino Uno w/ logging to SD card, future expansion to include WiFi
  **************************************************************************/
  
-#include <SoftwareSerial.h>
-#include <SD.h>
-#include <RTClib.h>
 #include "Globals.h" 
-
 
 //***** Main Setup() and Loop() functions *****//
 
@@ -50,20 +46,25 @@ void setup() {
     #ifdef USEBUTTON
       pinMode(buttonPin, INPUT);
     #endif
-    pinMode(chipSelect, OUTPUT);
 
   // Initialize SD Card
-    #ifdef DEBUG
-      if (!SD.begin(chipSelect))
-        {
-          Serial.println("Card failed, or not present");
-        }
-      else
-        {
-          Serial.println("card initialized.");
-        }
-    #else
-      SD.begin(chipSelect);   // No need to handle failure here, since there's no UI, and we want the roof to work anyway.
+    #ifdef LOGGING
+      pinMode(chipSelect, OUTPUT);
+        if (!SD.begin(chipSelect))
+          {
+            #ifdef DEBUG
+              Serial.println("Card failed, or not present");
+            #endif
+          }
+        else
+          {
+            #ifdef DEBUG
+              Serial.println("Card initialized.");
+            #endif
+            RTC.begin();
+            RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));   //TODO : Check for initialized after battery arrives :)
+            createFile();
+          }
     #endif
 
 }   // end setup()
@@ -133,9 +134,6 @@ void loop() {
               Serial.print(shutterState);
               Serial.println("#");
             }
-          // shutterState = SHUTTEROPENING;
-          // Serial.print(openRoof());
-          // Serial.println("#");
         }
 
       else if (strCmd == "clos")
@@ -147,9 +145,6 @@ void loop() {
               Serial.print(shutterState);
               Serial.println("#");
             }
-          
-          // Serial.print(closeRoof());
-          // Serial.println("#");     
         }
 
     else if (strCmd == "info")

@@ -19,10 +19,14 @@
  *  2.2.0       2020NOV19   EOR   Add handling for garbage serial, increase baud rates
  *  2.3.0       2020NOV21   EOR   Pretty sure the button code and lack of a pulldown resistor is causing roof issues, because I am an idiot.
  *                                Adding #DEF and IFDEF to button code
+ *  3.0.0       2020NOV21   EOR   3.x branch, port to Arduino Uno w/ logging to SD card, future expansion to include WiFi
  **************************************************************************/
  
 #include <SoftwareSerial.h>
+#include <SD.h>
+#include <RTClib.h>
 #include "Globals.h" 
+
 
 //***** Main Setup() and Loop() functions *****//
 
@@ -45,6 +49,21 @@ void setup() {
   // Set up pins
     #ifdef USEBUTTON
       pinMode(buttonPin, INPUT);
+    #endif
+    pinMode(chipSelect, OUTPUT);
+
+  // Initialize SD Card
+    #ifdef DEBUG
+      if (!SD.begin(chipSelect))
+        {
+          Serial.println("Card failed, or not present");
+        }
+      else
+        {
+          Serial.println("card initialized.");
+        }
+    #else
+      SD.begin(chipSelect);   // No need to handle failure here, since there's no UI, and we want the roof to work anyway.
     #endif
 
 }   // end setup()

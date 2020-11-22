@@ -58,6 +58,9 @@
   #define SHUTTERCLOSING 3
   #define SHUTTERERROR 4
 
+// Real Time Clock object
+  RTC_DS1307 RTC;
+
 // Other variables
   String strCmd;
   unsigned int limitStatus = 0;
@@ -70,12 +73,15 @@
   int motorState = 0;
   bool closedLimitSwitch = false;
   bool openLimitSwitch = false;
+  const int chipSelect = 10;  //digital pin 10 for the SD cs line
   #ifdef USEBUTTON
     int buttonState = 0;
     int buttonDelay = 1000;
     bool buttonPressed = false;
   #endif
-  
+
+// Logging file
+  File logfile;
 
 // SoftwareSerial for communication w/ SMC
   SoftwareSerial smcSerial = SoftwareSerial(rxPin, txPin);

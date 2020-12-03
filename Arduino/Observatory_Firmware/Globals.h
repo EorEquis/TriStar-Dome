@@ -3,7 +3,7 @@
 // #defines
   // #define DEBUG   // Uncomment to allow debug printout to serial
   // #define USEBUTTON    // Uncomment to allow use of manual open/close button
-  #define LOGGING         // Uncomment to support SD Shield w/ RTC and logging to SD Card.
+//  #define LOGGING         // Uncomment to support SD Shield w/ RTC and logging to SD Card.
 
 // Setup for SD Card shield
   #ifdef LOGGING

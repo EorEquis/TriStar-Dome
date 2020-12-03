@@ -1,7 +1,7 @@
-#include <SoftwareSerial.h>
+                                 #include <SoftwareSerial.h>
 
 // #defines
-  #define DEBUG   // Uncomment to allow debug printout to serial
+  // #define DEBUG   // Uncomment to allow debug printout to serial
   // #define USEBUTTON    // Uncomment to allow use of manual open/close button
   #define LOGGING         // Uncomment to support SD Shield w/ RTC and logging to SD Card.
 

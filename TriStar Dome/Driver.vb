@@ -16,6 +16,7 @@
 ' 05-DEC-2017   Eor 0.2.0   WTF is going on with my IDEs?
 ' 05-DEC-2017   Eor 1.0.0   Initial operating version, tested in SGP
 ' 07-DEC-2017   Eor 1.1.0   Cleanup, remove LCD
+' 07-NOV-2020   Eor 1.2.0   Change to ShutterStatus, Setup Dialog
 ' ---------------------------------------------------------------------------------
 '
 '
@@ -60,11 +61,13 @@ Public Class Dome
     '
     Friend Shared driverID As String = "ASCOM.TriStar.Dome"
     Private Shared driverDescription As String = "TriStar Dome"
+    Private Shared strDriverVersion As String = "3.0.0b"
 
     Friend Shared comPortProfileName As String = "COM Port" 'Constants used for Profile persistence
     Friend Shared traceStateProfileName As String = "Trace Level"
     Friend Shared comPortDefault As String = "COM1"
     Friend Shared traceStateDefault As String = "False"
+
 
     Friend Shared comPort As String ' Variables to hold the currrent device configuration
     Friend Shadows portNum As String
@@ -75,6 +78,7 @@ Public Class Dome
     Private astroUtilities As AstroUtils ' Private variable to hold an AstroUtils object to provide the Range method
     Private TL As TraceLogger ' Private variable to hold the trace logger object (creates a diagnostic log file with information that you specify)
     Private objSerial As ASCOM.Utilities.Serial
+    Private statusTimer As System.Timers.Timer
 
     '
     ' Constructor - Must be public for COM registration!
@@ -91,6 +95,10 @@ Public Class Dome
         astroUtilities = New AstroUtils 'Initialise new astro utiliites object
 
         'TODO: Implement your additional construction here
+        statusTimer = New Timers.Timer
+        statusTimer.Interval = 1000
+        statusTimer.AutoReset = True
+        AddHandler statusTimer.Elapsed, AddressOf Timer_Tick
 
         TL.LogMessage("Dome", "Completed initialisation")
     End Sub
@@ -153,7 +161,7 @@ Public Class Dome
         ' TODO : Multithreading
         Try
             Dim response As String
-            CheckConnected("CommandString")
+            ' CheckConnected("CommandString")
             objSerial.Transmit(Command)
             response = objSerial.ReceiveTerminated("#")
             response = response.Replace("#", "")
@@ -175,18 +183,21 @@ Public Class Dome
             End If
 
             If value Then
-                connectedState = True
                 TL.LogMessage("Connected Set", "Connecting to port " + comPort)
                 portNum = Right(comPort, Len(comPort) - 3)
                 objSerial = New ASCOM.Utilities.Serial
                 objSerial.Port = CInt(portNum)
-                objSerial.Speed = SerialSpeed.ps9600
+                objSerial.Speed = SerialSpeed.ps38400
                 objSerial.Connected = True
+                statusTimer.Enabled = True
+                wait(500)      ' Give the arduino a moment to get connected.
+                connectedState = True
             Else
-                connectedState = False
                 TL.LogMessage("Connected Set", "Disconnecting from port " + comPort)
                 objSerial.Connected = False
                 objSerial = Nothing
+                statusTimer.Enabled = False
+                connectedState = False
             End If
         End Set
     End Property
@@ -204,7 +215,7 @@ Public Class Dome
         Get
             Dim m_version As Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
             ' TODO customise this driver description
-            Dim s_driverInfo As String = "Information about the driver itself. Version: " + m_version.Major.ToString() + "." + m_version.Minor.ToString()
+            Dim s_driverInfo As String = "Information about the driver itself. Version: " + strDriverVersion
             TL.LogMessage("DriverInfo Get", s_driverInfo)
             Return s_driverInfo
         End Get
@@ -213,8 +224,8 @@ Public Class Dome
     Public ReadOnly Property DriverVersion() As String Implements IDomeV2.DriverVersion
         Get
             ' Get our own assembly and report its version number
-            TL.LogMessage("DriverVersion Get", Reflection.Assembly.GetExecutingAssembly.GetName.Version.ToString(2))
-            Return Reflection.Assembly.GetExecutingAssembly.GetName.Version.ToString(2)
+            TL.LogMessage("DriverVersion Get", strDriverVersion)
+            Return strDriverVersion
         End Get
     End Property
 
@@ -248,7 +259,7 @@ Public Class Dome
 
 #Region "IDome Implementation"
 
-    Private domeShutterState As Integer = 0 ' Variable to hold the status of the shutter
+    Private domeShutterState As Integer = 1 ' Variable to hold the status of the shutter
 
     Public Sub AbortSlew() Implements IDomeV2.AbortSlew
         CommandBlind("abrt#")
@@ -340,8 +351,9 @@ Public Class Dome
     End Property
 
     Public Sub CloseShutter() Implements IDomeV2.CloseShutter
-        domeShutterState = CommandString("clos#")
-        If domeShutterState = ShutterState.shutterClosing Then
+        domeShutterState = CInt(CommandString("clos#"))
+        If domeShutterState = 3 Then
+            ' If domeShutterState = ShutterState.shutterClosing Then
             TL.LogMessage("CloseShutter", "Shutter has been closed")
         Else
             TL.LogMessage("CloseShutter", "Error closing shutter")
@@ -354,8 +366,9 @@ Public Class Dome
     End Sub
 
     Public Sub OpenShutter() Implements IDomeV2.OpenShutter
-        domeShutterState = CommandString("open#")
-        If domeShutterState = ShutterState.shutterOpening Then
+        domeShutterState = CInt(CommandString("open#"))
+        If domeShutterState = 2 Then
+            ' If domeShutterState = ShutterState.shutterOpening Then
             TL.LogMessage("OpenShutter", "Shutter has been opened")
         Else
             TL.LogMessage("OpenShutter", "Error opening shutter")
@@ -374,7 +387,23 @@ Public Class Dome
 
     Public ReadOnly Property ShutterStatus() As ShutterState Implements IDomeV2.ShutterStatus
         Get
-            domeShutterState = CommandString("info#")
+            'Select Case domeShutterState
+            '    Case 0
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpen.ToString())
+            '        Return ShutterState.shutterOpen
+            '    Case 1
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosed.ToString())
+            '        Return ShutterState.shutterClosed
+            '    Case 2
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterOpening.ToString())
+            '        Return ShutterState.shutterOpening
+            '    Case 3
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterClosing.ToString())
+            '        Return ShutterState.shutterClosing
+            '    Case Else
+            '        TL.LogMessage("ShutterStatus", ShutterState.shutterError.ToString())
+            '        Return ShutterState.shutterError
+            'End Select
 
             Select Case domeShutterState
                 Case 0
@@ -389,8 +418,11 @@ Public Class Dome
                 Case 3
                     TL.LogMessage("ShutterStatus", ShutterState.shutterClosing.ToString())
                     Return ShutterState.shutterClosing
-                Case Else
+                Case 4
                     TL.LogMessage("ShutterStatus", ShutterState.shutterError.ToString())
+                    Return ShutterState.shutterError
+                Case Else
+                    TL.LogMessage("ShutterStatus", "Communication error, domeShutterstate = " + domeShutterState.ToString)
                     Return ShutterState.shutterError
             End Select
         End Get
@@ -506,6 +538,27 @@ Public Class Dome
             driverProfile.WriteValue(driverID, comPortProfileName, comPort.ToString())
         End Using
 
+    End Sub
+
+#End Region
+
+#Region "My Functions and methods"
+    Private Function getShutterState() As ShutterState
+        Return CommandString("info#")
+    End Function
+
+    Private Sub Timer_Tick(source As Object, e As EventArgs)
+        domeShutterState = CInt(getShutterState())
+    End Sub
+
+    Private Sub wait(ByVal interval As Integer)
+        '  Delays interval milliseconds, without blocking the UI
+        Dim sw As New Stopwatch
+        sw.Start()
+        Do While sw.ElapsedMilliseconds < interval
+            Application.DoEvents()
+        Loop
+        sw.Stop()
     End Sub
 
 #End Region

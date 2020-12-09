@@ -9,3 +9,14 @@ D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\Test UI.vbproj.G
 D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.exe
 D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.xml
 D:\Dev\TriStar Observatory\TriStar Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.pdb
+D:\Dev\Git\TriStar-Dome\Test UI\bin\Release\ASCOM.TriStar.Test.exe.config
+D:\Dev\Git\TriStar-Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.exe
+D:\Dev\Git\TriStar-Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.xml
+D:\Dev\Git\TriStar-Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Test.pdb
+D:\Dev\Git\TriStar-Dome\Test UI\bin\Release\ASCOM.TriStar.Test.exe
+D:\Dev\Git\TriStar-Dome\Test UI\bin\Release\ASCOM.TriStar.Test.pdb
+D:\Dev\Git\TriStar-Dome\Test UI\bin\Release\ASCOM.TriStar.Test.xml
+D:\Dev\Git\TriStar-Dome\Test UI\obj\x86\Release\Test UI.vbprojResolveAssemblyReference.cache
+D:\Dev\Git\TriStar-Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Form1.resources
+D:\Dev\Git\TriStar-Dome\Test UI\obj\x86\Release\ASCOM.TriStar.Resources.resources
+D:\Dev\Git\TriStar-Dome\Test UI\obj\x86\Release\Test UI.vbproj.GenerateResource.Cache

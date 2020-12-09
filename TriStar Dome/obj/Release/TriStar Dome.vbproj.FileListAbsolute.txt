@@ -6,3 +6,12 @@ D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\ASCOM.TriStar.S
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\TriStar Dome.vbproj.GenerateResource.Cache
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\TriStar Dome.dll
 D:\Dev\TriStar Observatory\TriStar Dome\TriStar Dome\obj\Release\TriStar Dome.pdb
+D:\Dev\Git\TriStar-Dome\TriStar Dome\bin\Release\TriStar Dome.dll.config
+D:\Dev\Git\TriStar-Dome\TriStar Dome\bin\Release\TriStar Dome.dll
+D:\Dev\Git\TriStar-Dome\TriStar Dome\bin\Release\TriStar Dome.pdb
+D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\ASCOM.TriStar.Resources.resources
+D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\ASCOM.TriStar.SetupDialogForm.resources
+D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.vbproj.GenerateResource.Cache
+D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.dll
+D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.pdb
+D:\Dev\Git\TriStar-Dome\TriStar Dome\obj\Release\TriStar Dome.vbprojResolveAssemblyReference.cache
